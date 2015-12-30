@@ -26,12 +26,14 @@ namespace TwitterBot2
     {
         static void Main(string[] args)
         {
-            
+           
             tweetPublish publishTweet = new tweetPublish();
             //publishTweet.createTweet();
             //publishTweet.searchForTweets();
-            publishTweet.getQuote();
-            
+            //publishTweet.getQuote();
+            publishTweet.replyToUser();
+            //publishTweet.tweetWithMedia();
+            Console.ReadLine();
         }
 
         

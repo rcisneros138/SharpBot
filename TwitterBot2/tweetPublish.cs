@@ -23,43 +23,62 @@ namespace TwitterBot2
 {
     class tweetPublish
     {
-        public void replyToUser(string user,string tweetMessage)
+        Random rand = new Random();
+        List<string> tweetedUsers = new List<string>();
+        public void replyToUser()
         {
-            //take in list of users?
-            //take in randomly selected message from another function.
-            string message = String.Format("@{0}{1}", user, tweetMessage);
-            var tweet = Tweet.PublishTweet(message);
+            List<string> users = searchForTweets();
+            string chosenUser = users[rand.Next(users.Count)];
+
+            if (tweetedUsers.Contains(chosenUser))
+            {
+                return;
+            }
+            else
+            {
+                string message = String.Format("@" + "{0} {1}", chosenUser, FileMediaGetter.getFileItem("Quotes.txt"));
+                Console.WriteLine(message);
+                var tweet = Tweet.PublishTweet(message);
+                tweetedUsers.Add(chosenUser);
+            }
+        }
+
+        public void tweetWithMedia()
+        {
+            try
+            {
+                byte[] file = File.ReadAllBytes(FileMediaGetter.getMedia());
+                var tweet = Tweet.PublishTweetWithImage(FileMediaGetter.getFileItem("Quotes.txt"), file);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
 
         public List<string> searchForTweets()
         {
-            var tweets = Search.SearchTweets("werewolf");
+            var tweets = Search.SearchTweets("WereWolf");
             List<string> users = new List<string>();
             foreach (var tweet in tweets)
             {
                 try
                 {
-                    //add to list?
-                    //replyToUser(tweet.InReplyToScreenName, "Definitely not a Werewolf. all good.");
-                    //Thread.Sleep(300000);
-                    //Console.WriteLine(tweet.InReplyToScreenName);
                     users.Add(tweet.InReplyToScreenName);
+                    //Console.WriteLine(tweet);
+                    
                 }
                 catch (Exception exception)
                 {
                     Console.WriteLine(exception);
+                    continue;
                 }
             }
+            users.RemoveAll(string.IsNullOrWhiteSpace);
             return users;
         }
-        public string getQuote()
-        {
-            string[] lines = File.ReadAllLines("Quotes.txt");
-            Random rand = new Random();
-            int randomLineNumber = rand.Next(0, lines.Length);
-            string ChosenQuote = lines[randomLineNumber];
-            return ChosenQuote;
-        }
+       
 
     }
 }
