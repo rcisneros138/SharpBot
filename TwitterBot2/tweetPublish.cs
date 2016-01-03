@@ -25,6 +25,16 @@ namespace TwitterBot2
     {
         Random rand = new Random();
         List<string> tweetedUsers = new List<string>();
+        List<string> trendingTopics = new List<string>();
+
+        public void tweetTrending()
+        {
+            trendingTopics = getTrendingTweets();
+            string topic = trendingTopics[rand.Next(0, trendingTopics.Count)];
+            string message = String.Format("{0} #{1}", FileMediaGetter.getFileItem("Quotes.txt"), topic);
+            var tweet = Tweet.PublishTweet(message);
+
+        }
         public void replyToUser()
         {
             List<string> users = searchForTweets();
@@ -59,14 +69,15 @@ namespace TwitterBot2
 
         public List<string> searchForTweets()
         {
-            var tweets = Search.SearchTweets("WereWolf");
+            string searchTerm = FileMediaGetter.getFileItem("SearchTerms.txt");
+            var tweets = Search.SearchTweets(searchTerm);
             List<string> users = new List<string>();
             foreach (var tweet in tweets)
             {
                 try
                 {
                     users.Add(tweet.InReplyToScreenName);
-                    //Console.WriteLine(tweet);
+                    Console.WriteLine(tweet);
                     
                 }
                 catch (Exception exception)
@@ -78,7 +89,34 @@ namespace TwitterBot2
             users.RemoveAll(string.IsNullOrWhiteSpace);
             return users;
         }
-       
+        public List<string> getTrendingTweets()
+        {
+            int place = 2379574;
+            var trends = Trends.GetTrendsAt(place);
+            
+            var trendTermToSearch = trends.Trends.ToList();
+            List<string> trendingTopics = new List<string>();
+            foreach (var topic in trendTermToSearch)
+            {
+                if (topic.Name.StartsWith("#"))
+                {
+                    string topicNoHash = topic.Name.Remove(0,1);
+                    trendingTopics.Add(topicNoHash);
+                }
+                else
+                {
+                    trendingTopics.Add(topic.Name);
+                }
+            }
+            return trendingTopics;
+            
+        }
 
+        public string topicToSeach()
+        {
+
+            return null;
+        }
+       
     }
 }

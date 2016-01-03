@@ -111,7 +111,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BotStart.cs" />
     <Compile Include="FileMediaGetter.cs" />
+    <Compile Include="FollowerManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="tweetPublish.cs" />

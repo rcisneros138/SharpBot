@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Net.Http;
 using System.Reflection;
 using Tweetinvi;
@@ -26,16 +27,18 @@ namespace TwitterBot2
     {
         static void Main(string[] args)
         {
-           
+            
             tweetPublish publishTweet = new tweetPublish();
-            //publishTweet.createTweet();
-            //publishTweet.searchForTweets();
-            //publishTweet.getQuote();
-            publishTweet.replyToUser();
-            //publishTweet.tweetWithMedia();
+            FollowerManager followerManager = new FollowerManager();
+            BotStart startBot = new BotStart();
+            startBot.runBot();
+            
+            
+          
+           
             Console.ReadLine();
         }
-
+       
         
     }
 }
